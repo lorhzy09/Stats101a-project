@@ -15,6 +15,6 @@ movies <- read.csv("movies_refined.csv", header = TRUE)
 lm <- lm(revenue ~ budget + popularity + vote_average + runtime, data = movies)
 summary(lm)
 
-plot(movies$revenue, movies$budget)
+plot(movies$budget, movies$revenue)
 
 ```
