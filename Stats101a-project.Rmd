@@ -8,13 +8,78 @@ date: "2023-07-25"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+## Dataset import 
 ```{r}
 
 movies <- read.csv("movies_refined.csv", header = TRUE)
 
+```
+
+
+
+
+# mini assignment 2
+
+
+## 2.1 
+
+> Generate the scatter plot matrix of the original variables, and discuss what you observe about their relationship. Upload the scatter plot matrix as part of your response.
+
+```{r}
+pairs(movies[,c(3,1,2,6,4)], pch = 19)
+```
+
+
+## 2.2
+
+> Fit the full model using original variables. Copy the R output for the numerical measures of the model, i.e., Im (model). Report 1) R2, and 2) p-value of ANOVA.
+
+```{r}
 lm <- lm(revenue ~ budget + popularity + vote_average + runtime, data = movies)
 summary(lm)
-
-plot(movies$budget, movies$revenue)
+anova(lm)
 
 ```
+
+Therefore, we have the following numerical measures of the model: From summary(lm), we have that the R^2 is equal to 0.6188.
+
+From anova(lm) we have that the p value of budget, popularity and vote_average are <2e-16, while p value for runtime is 0.9232.
+
+
+
+# 2.3
+> Generate the diagnostic plots for the full model. Upload the plots as part of your response. Discuss the violated model assumption, if any.
+
+The Residuals vs Fitted plot indicates good model performance at low fitted values, with small residuals close to 0. However, as fitted values increase, the relationship becomes non-linear, and errors deviate from 0. Plus, data points are clustered at low fitted values rather than randomly distributed.
+The normal Q-Q plot shows a non-normal, heavy-tailed distribution of error terms.
+The √Standardized residuals plot indicates non-constant variance.
+The Residuals vs Leverage plot reveals the presence of outliers and problematic leverage points, notably observation 62 and 2774. These data points require careful consideration and handling in subsequent analysis.
+
+# 2.4
+> Do you need to consider transformation? If yes, explain which variables need to be transformed, and specify their A's.
+	
+Plotting the explanatory variables with respect to revenue, and we have that:
+
+1. Budget: The distribution is skewed to the right, indicating that most of the movies have a low budget. The scatter plot shows a positive relationship between budget and revenue, but with a high level of variability.
+
+2. Popularity: The distribution is also skewed to the right, indicating that most movies have low popularity scores. The scatter plot shows a positive relationship with revenue, with a high level of variability.
+
+3. Runtime: The distribution appears to be somewhat normally distributed, although it does have a slight right skew. The scatter plot does not show a clear relationship between runtime and revenue.
+
+4. Vote_average: The distribution is somewhat bell-shaped but with a left skew, indicating that most movies have higher average votes. The scatter plot does not show a clear relationship between vote average and revenue.
+
+Given the diagnostic plots and their interpretations, it seems like the assumptions of linearity and homoscedasticity are reasonable, while the assumption of normality might not hold perfectly for the residuals. This suggests that some transformation might be needed. However, there are many zeros in the budget column, and the log transformation is not defined for zero. One common solution is to apply a log transformation to budget + 1.
+
+
+## 2.5 
+> Do you need variable selection? If yes, specify what method you used to select the variables. Then, write your final regression model for your data set. For example, you may write Y=30+B1Xte
+
+As we only have 4 explanatory variables, there's no need to do variable selection.
+
+The regression model can be modeled as:
+
+
+## 2.6
+> Copy the R output for the numerical measures of the final model, Report 1) R2, and 2) p-value of ANOVA.
+
